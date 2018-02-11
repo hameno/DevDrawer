@@ -10,11 +10,16 @@ import android.widget.Filterable
 import android.widget.TextView
 import de.psdev.devdrawer.R
 import de.psdev.devdrawer.database.DevDrawerDatabase
+import kotlinx.coroutines.runBlocking
+import java.util.*
 
-class PartialMatchAdapter(activity: Activity,
-                          private val items: List<String>,
-                          private val devDrawerDatabase: DevDrawerDatabase,
-                          private val editMode: Boolean = false): BaseAdapter(), Filterable {
+class PartialMatchAdapter(
+    activity: Activity,
+    private val profileId: String,
+    private val items: List<String>,
+    private val devDrawerDatabase: DevDrawerDatabase,
+    private val editMode: Boolean = false
+): BaseAdapter(), Filterable {
     private val filteredItems = mutableListOf<String>()
     private val layoutInflater: LayoutInflater = activity.layoutInflater
     private val packageFilter = object: Filter() {
@@ -25,9 +30,7 @@ class PartialMatchAdapter(activity: Activity,
                     values = items
                 }
             } else {
-                val existingFilters = devDrawerDatabase.packageFilterDao()
-                    .filters()
-                    .blockingFirst()
+                val existingFilters = runBlocking { devDrawerDatabase.packageFilterDao().findAllByProfile(profileId) }
                     .map { it.filter }
                 val existingFilterRegexes = existingFilters
                     .map { it.replace("*", ".*").toRegex() }
@@ -37,7 +40,7 @@ class PartialMatchAdapter(activity: Activity,
                     // Filter item matching existing filters with regex
                     .filterNot { !editMode && existingFilterRegexes.any { regex -> regex.matches(it) } }
                     // Filter matching
-                    .filter { it.toLowerCase().contains(charSequence.toString().toLowerCase()) }
+                    .filter { it.toLowerCase(Locale.ROOT).contains(charSequence.toString().toLowerCase(Locale.ROOT)) }
                 FilterResults().apply {
                     count = filteredItems.size
                     values = filteredItems

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_config_widget"
+    app:startDestination="@id/editWidgetFragment"
+    tools:ignore="UnusedNavigation">
+
+    <fragment
+        android:id="@+id/editWidgetFragment"
+        android:name="de.psdev.devdrawer.widgets.EditWidgetFragment"
+        tools:layout="@layout/fragment_widget_edit">
+        <argument
+            android:name="widgetId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/createProfileAction"
+            app:destination="@id/widgetProfileEditFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/widgetProfileEditFragment"
+        android:name="de.psdev.devdrawer.profiles.WidgetProfileEditFragment"
+        tools:layout="@layout/fragment_widget_profile_edit" >
+        <argument
+            android:name="profileId"
+            app:argType="string" />
+    </fragment>
+</navigation>

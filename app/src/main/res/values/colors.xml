@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#8BC34A</color>
-    <color name="primary_dark">#689F38</color>
-    <color name="accent">#9CCC65</color>
 
-    <color name="app_name_light">#000000</color>
-    <color name="app_name_dark">#EBEBEB</color>
+    <color name="colorPrimary">#8bc34a</color>
+    <color name="colorPrimaryVariant">#5a9216</color>
+    <color name="colorOnPrimary">#FFF</color>
+
+    <color name="colorSecondary">#ff9800</color>
+    <color name="colorSecondaryVariant">#c66900</color>
+    <color name="colorOnSecondary">#FFF</color>
+
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorOnSurface">#000000</color>
+
+    <color name="colorError">#FF5722</color>
+    <color name="colorOnError">#FFFFFF</color>
+
+    <!-- Widget colors -->
+    <color name="widgetTextColor">#000</color>
+    <color name="widgetTextColorVariant">#222</color>
+    <color name="widgetSelectedColor">#4D8BC34A</color>
+    <color name="widgetIconColor">#000</color>
 </resources>

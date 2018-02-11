@@ -1,15 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryDark">@color/primary_dark</item>
-        <item name="colorAccent">@color/accent</item>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
+        <!-- Theme colors -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
 
-        <item name="preferenceTheme">@style/Theme.Purple.Settings.Preferences</item>
+        <!-- Status bar color (even if colorPrimaryVariant is set) -->
+        <item name="colorPrimaryDark">@color/colorPrimaryVariant</item>
+
+        <item name="preferenceTheme">@style/Theme.Settings.Preferences</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Theme colors -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+
+        <item name="preferenceTheme">@style/Theme.Settings.Preferences</item>
+    </style>
+
+    <style name="AppTheme.Dialog.NoActionBar" parent="Theme.MaterialComponents.DayNight.Dialog">
+        <!-- Theme colors -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+    </style>
+
+    <style name="Theme.Settings.Preferences" parent="PreferenceThemeOverlay.v14.Material">
+        <item name="checkBoxPreferenceStyle">@style/Preference.CheckBoxPreference.Material.DayNight</item>
+        <item name="switchPreferenceCompatStyle">@style/Preference.SwitchPreferenceCompat.Material.DayNight</item>
+    </style>
+
+    <style name="Preference.CheckBoxPreference.Material.DayNight" parent="Preference.CheckBoxPreference.Material">
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
 
     </style>
 
-    <style name="Theme.Purple.Settings.Preferences" parent="@style/PreferenceThemeOverlay.v14.Material" />
+    <style name="Preference.SwitchPreferenceCompat.Material.DayNight" parent="Preference.SwitchPreferenceCompat.Material">
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:colorAccent">@color/colorPrimary</item>
+    </style>
 
 </resources>

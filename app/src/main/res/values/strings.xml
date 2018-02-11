@@ -5,19 +5,6 @@
     <string name="pref_show_activity_choice">showActivityChoice</string>
     <bool name="pref_show_activity_choice_default">false</bool>
 
-    <string name="pref_launch_intents" translatable="false">launchingIntents</string>
-    <string name="pref_launch_intents_default" translatable="false">@string/launch_intent_aosp</string>
-    <string name="launch_intent_aosp">aosp</string>
-    <string name="launch_intent_devdrawer">devdrawer</string>
-    <array name="launch_intent_labels">
-        <item>AOSP Launcher</item>
-        <item>DevDrawer Original Config</item>
-    </array>
-    <array name="launch_intent_values">
-        <item>@string/launch_intent_aosp</item>
-        <item>@string/launch_intent_devdrawer</item>
-    </array>
-
     <string name="pref_sort_order" translatable="false">sort_order</string>
     <string name="pref_sort_order_default" translatable="false">@string/sort_order_last_updated</string>
     <string name="sort_order_last_updated" translatable="false">LAST_UPDATED</string>
@@ -37,24 +24,36 @@
         <item>@string/sort_order_package_name</item>
     </array>
 
-    <string name="pref_theme" translatable="false">theme</string>
-    <string name="pref_theme_default" translatable="false">@string/theme_light</string>
+    <string name="pref_feature_analytics_opted_in" translatable="false">feature_analytics_opted_in</string>
 
-    <string name="theme_light">Light</string>
-    <string name="theme_dark">Dark</string>
-    <array name="widget_themes">
-        <item>@string/theme_light</item>
-        <item>@string/theme_dark</item>
-    </array>
-    <string name="no_main_activity_could_be_found">No main activity could be found.\nEnable the activity chooser dialog.</string>
+    <!-- AboutLibraries -->
+    <string name="aboutLibraries_description_name">DevDrawer</string>
+    <string name="aboutLibraries_description_text">An Android application designed to help developers by automatically adding their apps to a widget for easy launching.</string>
+    <string name="aboutLibraries_description_special1_name">Play Store</string>
+    <string name="aboutLibraries_description_special2_name">Github</string>
 
     <!-- New -->
-    <string name="packagefilter">PACKAGE FILTER:</string>
-    <string name="change">Change</string>
-    <string name="edit_filter">Edit filter</string>
-    <string name="delete_filter">Delete filter</string>
-    <string name="package_filter_hint">com.example.*</string>
+    <string name="packagefilter">Package filter</string>
     <string name="settings">Settings</string>
     <string name="app_info">App info</string>
+
+    <string name="profiles">Profiles</string>
+    <string name="widgets">Widgets</string>
+    <string name="save">Save</string>
+    <string name="no_profiles">No profiles</string>
+    <string name="new_profile">New</string>
+    <string name="name">Name</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="apply">Apply</string>
+    <string name="add">Add</string>
+    <string name="reload">Reload</string>
+    <string name="edit_widget">Edit widget</string>
+    <string name="close">Close</string>
+    <string name="info">Info</string>
+    <string name="app_signature">App signature</string>
+    <string name="hint_profile_editing">You can edit profiles by long-clicking an entry</string>
+    <string name="delete">Delete</string>
+    <string name="uninstall">Uninstall</string>
+    <string name="app_details">App details</string>
 
 </resources>
