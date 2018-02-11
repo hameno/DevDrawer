@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory android:title="Activity Launcher">
-        <CheckBoxPreference
-            android:defaultValue="@bool/pref_show_activity_choice_default"
+        <SwitchPreferenceCompat
             android:key="@string/pref_show_activity_choice"
-            android:title="Show activity choice on launch" />
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="Launching Intents">
-        <ListPreference
-            android:defaultValue="@string/pref_launch_intents_default"
-            android:entries="@array/launch_intent_labels"
-            android:entryValues="@array/launch_intent_values"
-            android:key="@string/pref_launch_intents"
-            android:title="Launching Intent" />
+            android:title="Show activity choice on launch"
+            app:defaultValue="@bool/pref_show_activity_choice_default" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Sorting">
@@ -25,15 +17,17 @@
             android:entryValues="@array/sort_order_values"
             android:key="@string/pref_sort_order"
             android:title="Widget Sorting Options" />
-
     </PreferenceCategory>
-    <PreferenceCategory android:title="Widget Theme">
-        <ListPreference
-            android:defaultValue="@string/pref_theme_default"
-            android:entries="@array/widget_themes"
-            android:entryValues="@array/widget_themes"
-            android:key="@string/pref_theme"
-            android:title="Theme" />
+
+    <PreferenceCategory
+        android:key="feature_analytics"
+        android:title="Analytics"
+        app:isPreferenceVisible="false">
+        <SwitchPreferenceCompat
+            android:key="@string/pref_feature_analytics_opted_in"
+            android:title="Opt-in to analytics"
+            app:defaultValue="false"
+            app:isPreferenceVisible="false" />
     </PreferenceCategory>
 
 </PreferenceScreen>

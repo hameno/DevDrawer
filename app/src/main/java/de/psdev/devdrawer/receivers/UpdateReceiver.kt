@@ -24,7 +24,10 @@ class UpdateReceiver: BroadcastReceiver() {
         context.sendBroadcast(Intent(context, DDWidgetProvider::class.java).apply {
             `package` = context.packageName
             action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-            putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetManager.getAppWidgetIds(ComponentName(context, DDWidgetProvider::class.java)))
+            putExtra(
+                AppWidgetManager.EXTRA_APPWIDGET_IDS,
+                appWidgetManager.getAppWidgetIds(ComponentName(context, DDWidgetProvider::class.java))
+            )
         })
     }
 }

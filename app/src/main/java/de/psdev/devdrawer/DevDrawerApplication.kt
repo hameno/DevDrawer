@@ -3,53 +3,50 @@ package de.psdev.devdrawer
 import android.app.Application
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Looper
-import androidx.room.Room
-import com.crashlytics.android.Crashlytics
-import com.evernote.android.job.JobManager
-import com.squareup.leakcanary.LeakCanary
-import de.psdev.devdrawer.appwidget.UpdateJob
-import de.psdev.devdrawer.appwidget.UpdateJobCreator
-import de.psdev.devdrawer.database.DevDrawerDatabase
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
+import dagger.hilt.android.HiltAndroidApp
+import de.psdev.devdrawer.appwidget.UpdateWidgetsWorker
 import de.psdev.devdrawer.receivers.AppInstallationReceiver
-import io.reactivex.android.plugins.RxAndroidPlugins
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.plugins.RxJavaPlugins
+import de.psdev.devdrawer.widgets.CleanupWidgetsWorker
 import mu.KLogging
+import javax.inject.Inject
 import kotlin.system.measureTimeMillis
 
-class DevDrawerApplication: Application() {
+@HiltAndroidApp
+class DevDrawerApplication: Application(), Configuration.Provider {
 
-    companion object: KLogging() {
-        init {
-            RxAndroidPlugins.setInitMainThreadSchedulerHandler { AndroidSchedulers.from(Looper.getMainLooper(), true) }
-            RxJavaPlugins.setErrorHandler { throwable ->
-                logger.warn("Uncaught error: {}", throwable.message, throwable)
-                // Send to crashlytics as non-fatal error
-                Crashlytics.logException(throwable)
-            }
-        }
-    }
+    companion object: KLogging();
 
-    val devDrawerDatabase: DevDrawerDatabase by lazy { Room.databaseBuilder(this, DevDrawerDatabase::class.java, DevDrawerDatabase.NAME).build() }
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
 
     private val appInstallationReceiver: AppInstallationReceiver = AppInstallationReceiver()
 
     override fun onCreate() {
-        super.onCreate()
         measureTimeMillis {
-            if (LeakCanary.isInAnalyzerProcess(this)) {
-                // This process is dedicated to LeakCanary for heap analysis.
-                // You should not init your app in this process.
-                return
-            }
-            LeakCanary.install(this)
+            super.onCreate()
             registerAppInstallationReceiver()
-            setupJobScheduler()
+            setupWorkers()
         }.let {
             logger.warn("{} version {} ({}) took {}ms to init", this::class.java.simpleName, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, it)
         }
     }
+
+    // ==========================================================================================================================
+    // Configuration.Provider
+    // ==========================================================================================================================
+
+    override fun getWorkManagerConfiguration(): Configuration {
+        logger.warn { "getWorkManagerConfiguration" }
+        return Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
+    }
+
+    // ==========================================================================================================================
+    // Private API
+    // ==========================================================================================================================
 
     private fun registerAppInstallationReceiver() {
         registerReceiver(appInstallationReceiver, IntentFilter().apply {
@@ -60,12 +57,9 @@ class DevDrawerApplication: Application() {
         })
     }
 
-    private fun setupJobScheduler() {
-        JobManager.create(this).addJobCreator(UpdateJobCreator(this))
-        UpdateJob.enableJob()
-        logger.debug { "Job requests: ${JobManager.instance().allJobRequests}" }
-        logger.debug { "Jobs: ${JobManager.instance().allJobs}" }
-        logger.debug { "Job results: ${JobManager.instance().allJobResults}" }
+    private fun setupWorkers() {
+        UpdateWidgetsWorker.enableWorker(this)
+        CleanupWidgetsWorker.enableWorker(this)
     }
 
 }

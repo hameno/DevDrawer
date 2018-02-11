@@ -7,15 +7,17 @@ buildscript {
         mavenCentral()
         jcenter()
         maven { url "https://plugins.gradle.org/m2" }
-        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath Plugins.android_gradle
-        classpath Plugins.kotlin_gradle
-        classpath Plugins.versions_gradle
+        classpath Plugins.kotlin
+        classpath Plugins.navigation_safeargs
         classpath Plugins.google_services_gradle
-        classpath Plugins.fabric
-
+        classpath Plugins.versions_gradle
+        classpath Plugins.firebaseCrashlyticsPlugin
+        classpath Plugins.firebasePerformancePlugin
+        classpath Plugins.daggerHiltPlugin
+        classpath Plugins.aboutLibrariesPlugin
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -25,12 +27,14 @@ apply from: rootProject.file('gradle/versioning.gradle')
 
 allprojects {
     group "de.psdev.devdrawer"
-    version enhancedVersion(2, 0, 1)
+    version enhancedVersion(2, 0, 6)
 
     repositories {
         google()
         mavenCentral()
         jcenter()
+        maven { url 'https://jitpack.io' }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 
     project.ext {
@@ -41,24 +45,11 @@ allprojects {
     }
 }
 
-dependencyUpdates.resolutionStrategy = {
-    componentSelection { rules ->
-        rules.all { selection ->
-            boolean rejected = ['jre', 'alpha', 'rc', 'beta'].any { qualifier ->
-                selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
-            }
-            if (rejected) {
-                selection.reject('Release candidate')
-            }
-        }
-    }
-}
-
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
 wrapper {
-    gradleVersion = '5.6.2'
+    gradleVersion = '6.7.1'
     distributionType = "all"
 }

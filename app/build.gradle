@@ -1,8 +1,16 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+    id 'com.github.triplet.play' version '3.0.0'
+}
+
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.fabric'
+apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'com.mikepenz.aboutlibraries.plugin'
+apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
     compileSdkVersion Config.compile_sdk
@@ -22,6 +30,25 @@ android {
         buildConfigField 'String', 'GIT_SHA', "\"${project.ext.gitHash}\""
 
         javaCompileOptions.annotationProcessorOptions.arguments['room.schemaLocation'] = rootProject.file('schemas').toString()
+    }
+    buildFeatures {
+        viewBinding true
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs += [
+                "-Xinline-classes",
+                "-progressive",
+                "-Xopt-in=kotlin.RequiresOptIn",
+                "-Xopt-in=kotlin.ExperimentalStdlibApi",
+                "-Xopt-in=kotlin.time.ExperimentalTime",
+                "-Xopt-in=kotlinx.coroutines.FlowPreview",
+                "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+        ]
     }
     testOptions {
         unitTests {
@@ -70,69 +97,116 @@ android {
     lintOptions {
         lintConfig project.file('lint.xml')
         disable "GoogleAppIndexingWarning"
-        check 'Interoperability'
+        enable 'Interoperability'
     }
     packagingOptions {
         exclude '**/LICENSE'
         exclude '**/LICENSE.txt'
         exclude '**/NOTICE'
         exclude '**/NOTICE.txt'
-        exclude '**/rxjava.properties'
         exclude '**/*.gwt.xml'
     }
 }
 
 dependencies {
     //
+    // Platforms
+    //
+    implementation platform(Platforms.firebase)
+    implementation platform(Platforms.kotlin)
+
+    //
     // Test dependencies
     //
     testImplementation Libs.junit
     testImplementation Libs.robolectric
-    testImplementation Libs.assertj
-    testImplementation Libs.mockito
+    testImplementation Libs.mockk
 
     //
     // Runtime dependencies
     //
 
-    // Support Library
-    implementation Libs.support_appcompat_v7
-    implementation Libs.support_preference_v7
+    // AboutLibraries
+    implementation Libs.about_libraries
 
     // AndroidX
-    implementation Libs.android_ktx
-    implementation Libs.room_runtime
-    implementation Libs.room_rxjava2
-    kapt Libs.room_compiler
+    implementation Libs.androidx_appcompat
+    implementation Libs.androidx_browser
+    implementation Libs.androidx_constraint_layout
+    implementation Libs.androidx_core
+    implementation Libs.androidx_fragment
+    implementation Libs.androidx_hilt_lifecycle_viewmodel
+    implementation Libs.androidx_hilt_work
+    implementation Libs.androidx_lifecycle_viewmodel
+    implementation Libs.androidx_lifecycle_java8
+    implementation Libs.androidx_lifecycle_process
+    implementation Libs.androidx_navigation_fragment
+    implementation Libs.androidx_navigation_ui
+    implementation Libs.androidx_preference
+    implementation Libs.androidx_recyclerview
+    implementation Libs.androidx_recyclerview_selection
+    implementation Libs.androidx_room_runtime
+    implementation Libs.androidx_room_ktx
+    implementation Libs.androidx_work_runtime
+    implementation Libs.androidx_work_gcm
+    kapt Libs.androidx_room_compiler
+    kapt Libs.androidx_hilt_compiler
 
-    // Android-Job
-    implementation Libs.android_job
+    // Android Material
+    implementation Libs.material_components
 
-    // Attribouter
-    implementation Libs.attribouter
-
-    // Crashlytics
-    implementation Libs.crashlytics
+    //  Dagger
+    implementation Libs.daggerHiltAndroid
+    kapt Libs.daggerHiltAndroidCompiler
 
     // Firebase
-    implementation Libs.firebaseAnalytics
+    implementation "com.google.firebase:firebase-analytics-ktx"
+    implementation "com.google.firebase:firebase-config-ktx"
+    implementation "com.google.firebase:firebase-crashlytics-ktx"
+    implementation "com.google.firebase:firebase-perf-ktx"
+
+    // FlowBinding
+    implementation Libs.flowBindingAndroid
+    implementation Libs.flowBindingCommon
+    implementation Libs.flowBindingMaterial
+
+    // Google Play
+    implementation Libs.googlePlayCore
+    implementation Libs.googlePlayCoreKtx
 
     // Kotlin
-    implementation Libs.kotlin_stdlib
+    implementation Libs.kotlinStdlib
+
+    // Kotlin Coroutines
+    implementation Libs.kotlinCoroutinesAndroid
 
     // LeakCanary
-    debugImplementation Libs.leak_canary
-    releaseImplementation Libs.leak_canary_no_op
+    debugImplementation Libs.leakCanary
+    implementation Libs.leakCanaryPlumberAndroid
 
     // Logging
-    implementation Libs.slf4j_android_logger
-    implementation Libs.kotlin_logging
+    implementation Libs.slf4jAndroidLogger
+    implementation Libs.kotlinLogging
 
-    // RxJava
-    implementation Libs.rxjava2
-    implementation Libs.rxandroid
-    implementation Libs.rxkotlin
+    // OkHttp
+    implementation Libs.okhttp
 
+    // Okio
+    implementation Libs.okio
 }
 
-apply plugin: 'com.google.gms.google-services'
+kapt {
+    correctErrorTypes true
+}
+
+import com.github.triplet.gradle.androidpublisher.ResolutionStrategy
+play {
+    def serviceAccountFileName = "google-play-api.json"
+    if (rootProject.file(serviceAccountFileName).exists()) {
+        serviceAccountCredentials.set(rootProject.file(serviceAccountFileName))
+    } else if (System.getenv("ANDROID_PUBLISHER_CREDENTIALS") == null) {
+        enabled.set(false)
+    }
+    resolutionStrategy.set(ResolutionStrategy.IGNORE)
+    releaseName.set(project.version)
+}

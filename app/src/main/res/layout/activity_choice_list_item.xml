@@ -13,7 +13,6 @@
         android:layout_alignParentTop="true"
         android:ellipsize="end"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textColor="@color/primary"
         android:textIsSelectable="false"
         tools:text="de.psdev.devdrawer" />
 
@@ -24,7 +23,7 @@
         android:layout_below="@+id/activityPathTextView"
         android:ellipsize="end"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="#000"
+        android:textColor="?attr/colorPrimary"
         android:textIsSelectable="false"
         tools:text=".MainActivity" />
 </RelativeLayout>

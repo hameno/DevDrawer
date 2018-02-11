@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -11,4 +11,4 @@
         android:background="@drawable/background_repeat"
         android:minHeight="24dp"
         tools:listitem="@layout/activity_choice_list_item" />
-</merge>
+</FrameLayout>
