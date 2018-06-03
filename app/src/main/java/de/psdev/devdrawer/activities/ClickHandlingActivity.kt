@@ -38,7 +38,12 @@ class ClickHandlingActivity: Activity() {
                 Constants.LAUNCH_APP -> startApp(this, packageName)
                 Constants.LAUNCH_APP_DETAILS -> startAppDetails(this, packageName)
                 Constants.LAUNCH_UNINSTALL -> startUninstall(this, packageName)
+                // We need to always call finish
+                else -> finish()
             }
+        } else {
+            // We need to always call finish
+            finish()
         }
     }
 
