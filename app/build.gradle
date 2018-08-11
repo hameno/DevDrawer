@@ -14,7 +14,7 @@ android {
         versionCode project.ext.appVersionCode
         versionName project.ext.appVersionName
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
         // Version info
@@ -69,6 +69,7 @@ android {
     lintOptions {
         lintConfig project.file('lint.xml')
         disable "GoogleAppIndexingWarning"
+        check 'Interoperability'
     }
     packagingOptions {
         exclude '**/LICENSE'
@@ -108,6 +109,9 @@ dependencies {
 
     // Android-Job
     implementation Libs.android_job
+
+    // Attribouter
+    implementation Libs.attribouter
 
     // Kotlin
     implementation Libs.kotlin_stdlib

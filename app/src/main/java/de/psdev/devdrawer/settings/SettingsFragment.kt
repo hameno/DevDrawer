@@ -3,12 +3,12 @@ package de.psdev.devdrawer.settings
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.v7.preference.ListPreference
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceFragmentCompat
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.content.edit
+import androidx.preference.ListPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import de.psdev.devdrawer.R
 import de.psdev.devdrawer.appwidget.DDWidgetProvider
 

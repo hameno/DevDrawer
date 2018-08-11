@@ -11,7 +11,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.preference.PreferenceManager
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import de.psdev.devdrawer.DevDrawerApplication
