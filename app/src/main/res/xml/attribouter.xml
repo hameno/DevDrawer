@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<about>
+
+    <me.jfenn.attribouter.wedges.AppWedge repo="PSDev/DevDrawer" />
+
+    <me.jfenn.attribouter.wedges.ContributorsWedge
+        repo="PSDev/DevDrawer"
+        showDefaults="false">
+
+        <me.jfenn.attribouter.wedges.ContributorWedge
+            name="Philip Schiffer"
+            login="hameno"
+            position="1"
+            task="^Developer" />
+
+        <me.jfenn.attribouter.wedges.ContributorWedge
+            login="kyum1n"
+            position="2"
+            task="^Developer" />
+
+        <me.jfenn.attribouter.wedges.ContributorWedge
+            name="Tony Owen"
+            login="tunitowen"
+            position="3"
+            task="^Original Developer" />
+
+    </me.jfenn.attribouter.wedges.ContributorsWedge>
+
+    <me.jfenn.attribouter.wedges.LicensesWedge>
+
+        <me.jfenn.attribouter.wedges.LicenseWedge
+            repo="evernote/android-job"
+            website="https://github.com/evernote/android-job" />
+
+    </me.jfenn.attribouter.wedges.LicensesWedge>
+
+</about>

@@ -11,6 +11,5 @@
         android:id="@+id/action_info"
         android:icon="@drawable/ic_action_info"
         android:title="@string/app_info"
-        android:visible="false"
         app:showAsAction="ifRoom" />
 </menu>

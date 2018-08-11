@@ -40,7 +40,7 @@ allprojects {
 dependencyUpdates.resolutionStrategy = {
     componentSelection { rules ->
         rules.all { selection ->
-            boolean rejected = ['jre'].any { qualifier ->
+            boolean rejected = ['jre', 'alpha'].any { qualifier ->
                 selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
             }
             if (rejected) {
@@ -55,6 +55,6 @@ task clean(type: Delete) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.6'
+    gradleVersion = '4.9'
     distributionType = "all"
 }

@@ -1,9 +1,9 @@
 package de.psdev.devdrawer
 
-import android.arch.persistence.room.Room
 import android.content.Intent
 import android.content.IntentFilter
-import android.support.multidex.MultiDexApplication
+import androidx.multidex.MultiDexApplication
+import androidx.room.Room
 import com.evernote.android.job.JobManager
 import com.squareup.leakcanary.LeakCanary
 import de.psdev.devdrawer.appwidget.UpdateJob

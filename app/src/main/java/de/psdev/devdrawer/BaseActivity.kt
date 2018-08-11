@@ -1,10 +1,10 @@
 package de.psdev.devdrawer
 
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.NavUtils
-import android.support.v4.app.TaskStackBuilder
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NavUtils
+import androidx.core.app.TaskStackBuilder
+import androidx.fragment.app.FragmentManager
 import de.psdev.devdrawer.utils.consume
 
 abstract class BaseActivity: AppCompatActivity() {
@@ -62,7 +62,7 @@ abstract class BaseActivity: AppCompatActivity() {
             }
 
             val fragList = fm.fragments
-            if (fragList != null && !fragList.isEmpty()) {
+            if (!fragList.isEmpty()) {
                 for (frag in fragList) {
                     if (frag == null) {
                         continue

@@ -29,6 +29,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.main.*
+import me.jfenn.attribouter.Attribouter
 import mu.KLogging
 
 class MainActivity: BaseActivity(), TextWatcher {
@@ -72,7 +73,7 @@ class MainActivity: BaseActivity(), TextWatcher {
         packagesFilterListView.adapter = filterListAdapter
         addPackageEditText.setAdapter(packageNameCompletionAdapter)
         addPackageEditText.addTextChangedListener(this)
-        addButton.setOnClickListener {
+        addButton.setOnClickListener { _ ->
             val filter = addPackageEditText.text.toString()
             if (filter.isNotEmpty()) {
                 if (!filterListAdapter.data.map { it.filter }.contains(filter)) {
@@ -135,7 +136,7 @@ class MainActivity: BaseActivity(), TextWatcher {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_settings -> consume { startActivity(Intent(this, SettingsActivity::class.java)) }
-            R.id.action_info -> consume { TODO("Implement app info screen") }
+            R.id.action_info -> consume { Attribouter.from(this).show() }
             else -> super.onOptionsItemSelected(item)
         }
     }
