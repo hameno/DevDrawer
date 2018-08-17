@@ -2,6 +2,10 @@ language: android
 before_install:
 - openssl aes-256-cbc -K $encrypted_dbdccdaa27ba_key -iv $encrypted_dbdccdaa27ba_iv
   -in release.jks.enc -out release.jks -d
+- openssl aes-256-cbc -K $encrypted_dbdccdaa27ba_key -iv $encrypted_dbdccdaa27ba_iv
+  -in app/src/debug/google-services.json.enc -out app/src/debug/google-services.json -d
+- openssl aes-256-cbc -K $encrypted_9880f983d563_key -iv $encrypted_9880f983d563_iv
+  -in app/src/release/google-services.json.enc -out app/src/release/google-services.json -d
 - yes | sdkmanager "platforms;android-28"
 android:
   components:
