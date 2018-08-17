@@ -1,10 +1,12 @@
 object Versions {
     // General
-    const val kotlin = "1.2.60"
+    const val kotlin = "1.2.61"
 
     // Plugins
     const val androidGradle = "3.2.0-beta05"
     const val gradleVersions = "0.20.0"
+    const val googleServicesVersion = "4.0.2"
+    const val fabricPlugin = "1.25.4"
 
     // Libs
     const val androidArchitectureComponentsRoom = "2.0.0-rc01"
@@ -13,18 +15,20 @@ object Versions {
     const val androidKotlinExtensions = "1.0.0-rc01"
     const val androidJob = "1.2.6"
     const val attribouter = "0.1.0"
+    const val crashlytics = "2.9.4"
+    const val firebaseCore = "16.0.1"
     const val kotlinLogging = "1.5.9"
     const val leakCanary = "1.6.1"
     const val multidexVersion = "2.0.0"
     const val rxjava2 = "2.2.0"
-    const val rxandroid = "2.0.2"
+    const val rxandroid = "2.1.0"
     const val rxkotlin = "2.3.0"
     const val slf4jAndroidLogger = "1.0.5"
 
     // Testing
     const val junit = "4.12"
     const val robolectric = "3.8"
-    const val assertj = "3.10.0"
+    const val assertj = "3.11.0"
     const val mockito = "2.21.0"
 }
 
@@ -39,6 +43,8 @@ object Plugins {
     val android_gradle = "com.android.tools.build:gradle:${Versions.androidGradle}"
     val kotlin_gradle = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
     val versions_gradle = "com.github.ben-manes:gradle-versions-plugin:${Versions.gradleVersions}"
+    val google_services_gradle = "com.google.gms:google-services:${Versions.googleServicesVersion}"
+    val fabric = "io.fabric.tools:gradle:${Versions.fabricPlugin}"
 }
 
 object Libs {
@@ -59,6 +65,12 @@ object Libs {
 
     // Attribouter
     val attribouter = "me.jfenn:attribouter:${Versions.attribouter}"
+
+    // Crashlytics
+    val crashlytics = "com.crashlytics.sdk.android:crashlytics:${Versions.crashlytics}"
+
+    // Firebase
+    val firebaseCore = "com.google.firebase:firebase-core:${Versions.firebaseCore}"
 
     // Kotlin
     val kotlin_stdlib = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin}"

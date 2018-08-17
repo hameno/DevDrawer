@@ -2,20 +2,34 @@ package de.psdev.devdrawer
 
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Looper
 import androidx.multidex.MultiDexApplication
 import androidx.room.Room
+import com.crashlytics.android.Crashlytics
 import com.evernote.android.job.JobManager
 import com.squareup.leakcanary.LeakCanary
 import de.psdev.devdrawer.appwidget.UpdateJob
 import de.psdev.devdrawer.appwidget.UpdateJobCreator
 import de.psdev.devdrawer.database.DevDrawerDatabase
 import de.psdev.devdrawer.receivers.AppInstallationReceiver
+import io.reactivex.android.plugins.RxAndroidPlugins
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.plugins.RxJavaPlugins
 import mu.KLogging
 import kotlin.system.measureTimeMillis
 
 class DevDrawerApplication: MultiDexApplication() {
 
-    companion object: KLogging()
+    companion object: KLogging() {
+        init {
+            RxAndroidPlugins.setInitMainThreadSchedulerHandler { AndroidSchedulers.from(Looper.getMainLooper(), true) }
+            RxJavaPlugins.setErrorHandler { throwable ->
+                logger.warn("Uncaught error: {}", throwable.message, throwable)
+                // Send to crashlytics as non-fatal error
+                Crashlytics.logException(throwable)
+            }
+        }
+    }
 
     val devDrawerDatabase: DevDrawerDatabase by lazy { Room.databaseBuilder(this, DevDrawerDatabase::class.java, DevDrawerDatabase.NAME).build() }
 
