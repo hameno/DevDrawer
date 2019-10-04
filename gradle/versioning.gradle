@@ -16,7 +16,7 @@ ext {
     enhancedVersion = { final int versionMajor, final int versionMinor, final int versionPatch ->
         // Git commit count
         final gitHash = gitScmVersion()
-        final Integer gitVersion
+        Integer gitVersion
         try {
             final String lastTaggedRevision = "git rev-list --tags --no-walk --max-count=1".execute([], project.rootDir).text.trim()
             gitVersion = "git rev-list $lastTaggedRevision..HEAD --count".execute([], project.rootDir).text.trim().toInteger()

@@ -9,7 +9,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import de.psdev.devdrawer.BaseActivity
 import de.psdev.devdrawer.DevDrawerApplication
 import de.psdev.devdrawer.R
@@ -85,7 +85,7 @@ class MainActivity: BaseActivity(), TextWatcher {
                             UpdateReceiver.send(this)
                         })
                 } else {
-                    Toast.makeText(this, "Filter already exists", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(findViewById(android.R.id.content), "Filter already exists", Snackbar.LENGTH_INDEFINITE).show()
                 }
             }
 
@@ -93,13 +93,13 @@ class MainActivity: BaseActivity(), TextWatcher {
     }
 
     override fun onBackPressed() {
-        val intent = intent
         val extras = intent.extras
         var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
         if (extras != null) {
             appWidgetId = extras.getInt(
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
-                AppWidgetManager.INVALID_APPWIDGET_ID)
+                AppWidgetManager.INVALID_APPWIDGET_ID
+            )
         }
 
         if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
@@ -133,12 +133,10 @@ class MainActivity: BaseActivity(), TextWatcher {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_settings -> consume { startActivity(Intent(this, SettingsActivity::class.java)) }
-            R.id.action_info -> consume { Attribouter.from(this).show() }
-            else -> super.onOptionsItemSelected(item)
-        }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.action_settings -> consume { startActivity(Intent(this, SettingsActivity::class.java)) }
+        R.id.action_info -> consume { Attribouter.from(this).show() }
+        else -> super.onOptionsItemSelected(item)
     }
 
     override fun onDestroy() {
@@ -150,12 +148,12 @@ class MainActivity: BaseActivity(), TextWatcher {
     // TextWatcher
     // ==========================================================================================================================
 
-    override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
+    override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) = Unit
 
-    override fun onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
+    override fun onTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) = Unit
 
     override fun afterTextChanged(editable: Editable) {
-        packageNameCompletionAdapter.getFilter().filter(editable.toString())
+        packageNameCompletionAdapter.filter.filter(editable.toString())
     }
 
 }

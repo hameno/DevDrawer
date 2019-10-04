@@ -11,9 +11,10 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.preference.PreferenceManager
-import androidx.core.content.ContextCompat
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import de.psdev.devdrawer.DevDrawerApplication
 import de.psdev.devdrawer.R
 import de.psdev.devdrawer.activities.ClickHandlingActivity
@@ -124,7 +125,7 @@ class DDWidgetViewsFactory(private val context: Context, intent: Intent): Remote
             .blockingFirst(emptyList())
             .map { it.filter.replace("*", ".*").toRegex() }
 
-        val appList = packageManager.getInstalledPackages(0)
+        val appList = packageManager.getInstalledPackages(0).asSequence()
             .filter {
                 return@filter packageFilters.any { filter ->
                     return@any filter.matches(it.packageName)
@@ -152,8 +153,7 @@ class DDWidgetViewsFactory(private val context: Context, intent: Intent): Remote
     private val appComparator: Comparator<AppInfo>
         get() {
             val defaultSortOrder = context.getString(R.string.pref_sort_order_default)
-            val sortOrder = SortOrder.valueOf(sharedPreferences.getString(context.getString(R.string.pref_sort_order), defaultSortOrder))
-            return when (sortOrder) {
+            return when (SortOrder.valueOf(sharedPreferences.getNonNullString(R.string.pref_sort_order, defaultSortOrder))) {
                 SortOrder.FIRST_INSTALLED -> compareByDescending { it.firstInstalledTime }
                 SortOrder.LAST_UPDATED -> compareByDescending { it.lastUpdateTime }
                 SortOrder.NAME -> compareBy { it.name }
@@ -180,14 +180,21 @@ class DDWidgetViewsFactory(private val context: Context, intent: Intent): Remote
         return bmp
     }
 
+    private fun SharedPreferences.getNonNullString(
+        @StringRes stringRes: Int,
+        defaultValue: String
+    ): String = getString(context.getString(stringRes), defaultValue) ?: defaultValue
+
     // ==========================================================================================================================
     // Inner classes
     // ==========================================================================================================================
 
-    data class AppInfo(val name: String,
-                       val packageName: String,
-                       val appIcon: Drawable,
-                       val firstInstalledTime: Long,
-                       val lastUpdateTime: Long)
+    data class AppInfo(
+        val name: String,
+        val packageName: String,
+        val appIcon: Drawable,
+        val firstInstalledTime: Long,
+        val lastUpdateTime: Long
+    )
 
 }

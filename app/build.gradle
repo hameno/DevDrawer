@@ -90,7 +90,6 @@ dependencies {
     testImplementation Libs.robolectric
     testImplementation Libs.assertj
     testImplementation Libs.mockito
-    androidTestImplementation Libs.multidex_instrumentation
 
     //
     // Runtime dependencies
@@ -100,13 +99,11 @@ dependencies {
     implementation Libs.support_appcompat_v7
     implementation Libs.support_preference_v7
 
-    // Android Architecture Libraries
+    // AndroidX
+    implementation Libs.android_ktx
     implementation Libs.room_runtime
     implementation Libs.room_rxjava2
     kapt Libs.room_compiler
-
-    // Android Kotlin Extensions
-    implementation Libs.android_ktx
 
     // Android-Job
     implementation Libs.android_job
@@ -118,7 +115,7 @@ dependencies {
     implementation Libs.crashlytics
 
     // Firebase
-    implementation Libs.firebaseCore
+    implementation Libs.firebaseAnalytics
 
     // Kotlin
     implementation Libs.kotlin_stdlib
@@ -130,9 +127,6 @@ dependencies {
     // Logging
     implementation Libs.slf4j_android_logger
     implementation Libs.kotlin_logging
-
-    // Multidex
-    implementation Libs.multidex
 
     // RxJava
     implementation Libs.rxjava2

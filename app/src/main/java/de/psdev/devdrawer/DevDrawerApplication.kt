@@ -1,9 +1,9 @@
 package de.psdev.devdrawer
 
+import android.app.Application
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Looper
-import androidx.multidex.MultiDexApplication
 import androidx.room.Room
 import com.crashlytics.android.Crashlytics
 import com.evernote.android.job.JobManager
@@ -18,7 +18,7 @@ import io.reactivex.plugins.RxJavaPlugins
 import mu.KLogging
 import kotlin.system.measureTimeMillis
 
-class DevDrawerApplication: MultiDexApplication() {
+class DevDrawerApplication: Application() {
 
     companion object: KLogging() {
         init {

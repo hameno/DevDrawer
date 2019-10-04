@@ -24,8 +24,8 @@ class EditDialog: Activity(), TextWatcher {
         }
     }
 
-    private val id: Int by lazy { intent.extras.getInt("id") }
-    private val originalText: String by lazy { intent.extras.getString("text") }
+    private val id: Int by lazy { intent?.extras?.getInt("id")!! }
+    private val originalText: String by lazy { intent?.extras?.getString("text").orEmpty() }
 
     private val appPackages: List<String> by lazy { packageManager.getExistingPackages() }
     private val devDrawerDatabase by lazy { (application as DevDrawerApplication).devDrawerDatabase }

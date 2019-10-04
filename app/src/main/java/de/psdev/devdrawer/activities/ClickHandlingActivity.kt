@@ -69,7 +69,7 @@ class ClickHandlingActivity: Activity() {
         } else {
             // Launch the app
             try {
-                val intent = activity.packageManager.getLaunchIntentForPackage(packageName).apply {
+                val intent = activity.packageManager.getLaunchIntentForPackage(packageName)!!.apply {
                     addCategory(Intent.CATEGORY_LAUNCHER)
                     flags = if (sharedPreferences.getString(getString(R.string.pref_launch_intents), getString(R.string.pref_launch_intents_default)) ==
                         getString(R.string.launch_intent_aosp)) {

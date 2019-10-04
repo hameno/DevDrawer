@@ -5,6 +5,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        jcenter()
         maven { url "https://plugins.gradle.org/m2" }
         maven { url 'https://maven.fabric.io/public' }
     }
@@ -43,7 +44,7 @@ allprojects {
 dependencyUpdates.resolutionStrategy = {
     componentSelection { rules ->
         rules.all { selection ->
-            boolean rejected = ['jre', 'alpha'].any { qualifier ->
+            boolean rejected = ['jre', 'alpha', 'rc', 'beta'].any { qualifier ->
                 selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
             }
             if (rejected) {
@@ -57,7 +58,7 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.9'
+wrapper {
+    gradleVersion = '5.6.2'
     distributionType = "all"
 }

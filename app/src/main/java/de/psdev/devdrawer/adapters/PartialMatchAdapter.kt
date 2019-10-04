@@ -18,7 +18,7 @@ class PartialMatchAdapter(activity: Activity,
     private val filteredItems = mutableListOf<String>()
     private val layoutInflater: LayoutInflater = activity.layoutInflater
     private val packageFilter = object: Filter() {
-        override fun performFiltering(charSequence: CharSequence?): Filter.FilterResults {
+        override fun performFiltering(charSequence: CharSequence?): FilterResults {
             return if (charSequence == null) {
                 FilterResults().apply {
                     count = items.size
@@ -38,7 +38,7 @@ class PartialMatchAdapter(activity: Activity,
                     .filterNot { !editMode && existingFilterRegexes.any { regex -> regex.matches(it) } }
                     // Filter matching
                     .filter { it.toLowerCase().contains(charSequence.toString().toLowerCase()) }
-                Filter.FilterResults().apply {
+                FilterResults().apply {
                     count = filteredItems.size
                     values = filteredItems
                 }
@@ -46,7 +46,7 @@ class PartialMatchAdapter(activity: Activity,
         }
 
         @Suppress("UNCHECKED_CAST")
-        override fun publishResults(charSequence: CharSequence?, filterResults: Filter.FilterResults) {
+        override fun publishResults(charSequence: CharSequence?, filterResults: FilterResults) {
             filteredItems.clear()
             filteredItems.addAll(filterResults.values as Collection<String>)
             notifyDataSetChanged()

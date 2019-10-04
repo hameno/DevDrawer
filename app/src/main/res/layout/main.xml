@@ -32,7 +32,7 @@
         android:layout_toStartOf="@+id/addButton"
         android:fontFamily="sans-serif-light"
         android:hint="@string/package_filter_hint"
-        android:inputType="textNoSuggestions" />
+        android:inputType="text|textNoSuggestions" />
 
     <ListView
         android:id="@+id/packagesFilterListView"

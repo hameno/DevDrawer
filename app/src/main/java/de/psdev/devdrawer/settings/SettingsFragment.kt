@@ -30,7 +30,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
         }
 
         findPreference<ListPreference>(R.string.pref_sort_order).apply {
-            summary = sortOrderLabelFromValue(sharedPreferences.getString(getString(R.string.pref_sort_order), getString(R.string.pref_sort_order_default)))
+            summary = sortOrderLabelFromValue(sharedPreferences.getString(getString(R.string.pref_sort_order), getString(R.string.pref_sort_order_default)).orEmpty())
             setOnPreferenceChangeListener { preference, newValue ->
                 sharedPreferences.edit {
                     putString(preference.key, newValue.toString())
@@ -66,7 +66,7 @@ class SettingsFragment: PreferenceFragmentCompat() {
     // Private API
     // ==========================================================================================================================
 
-    private inline fun <reified T: Preference> findPreference(@StringRes keyRes: Int): T = findPreference(getString(keyRes)) as T
+    private inline fun <reified T: Preference> findPreference(@StringRes keyRes: Int): T = requireNotNull(findPreference(getString(keyRes)))
 
     private fun sortOrderLabelFromValue(value: String): String {
         val resources = resources
