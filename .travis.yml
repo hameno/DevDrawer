@@ -19,12 +19,12 @@ before_install:
     -in app/src/release/google-services.json.enc -out app/src/release/google-services.json -d
 deploy:
   provider: releases
+  edge: true # opt in to dpl v2
   cleanup: false
   overwrite: true
   token:
-    secure: "PvYfN7XptJCkzLRTyBvdYVCaDOJzAJqLWDdhZ8ea475U4P83hRzkRsUzCNR6MH8VO4LCIEHiv5Wr3wfLBqSfzXJQQPGCxfAk9z95lnYsLM6ot/9zZita2gnKgBUZtQ1U2df44G1oI+Y8LfOf0ePthIFbzvJxfhN09Efqk+N7UPODAnBy1pohRILgsHrK9voL25lSxPFW33Zo18O9Oihys+F8zXFX2jXsFSg5jTF7j95nYvka/PhK5ZKhGDW+eTZ+L/QZhc7hUdkUw1NXP6A8M+lRc0p4dGWmexJj8QVax9BgzX6OV2IYFfwHja8hDn/IZpIFyV6BZ9Mzl6B0GMdqrKRmLsoJ50/nvoXe8EG2PuXUmI+C4PAREHXQn/I1jwQccGIWQHe6xAjdR/s1c6m7NgzExeZimWt1RF6Ejp0Ga8863DEP9x0FLoOcbDWLaGLaM5P/uElEy6VLiV21LnEh4NAgkfwbuDI86oteBTbnScl2cye/oEEnQvLtM/14lquNjgSXMihVxQYlyjQR8JbOzffbbALlPwpmdjrsQuWYJ2yIEOgV5oOj7rKUzIhyVwMEvhlAyuKoNaH2QP2g2B/RQF82p6tnTi83dpsOBdQHTcSaAuIVqxjIAgdG2jtAPquvPWsVCgxoPlqohdwIIWWxZpVY4Vj4ikb/nShsy6A3DuM="
-  file_glob: true
-  file: "app/build/outputs/apk/release/app-release.apk"
+    secure: Ykaldm+n0f7K/fp7RdH708sssxxO6Uq2V02v7mBg8KvfT48Dcou9W9EpTBqtELOJtcyJYNCsjELXuV9/vQeoBDyJh6LooNIHDzWGKkTsWxWrYfaocKQ60emr0iv1Y74RBN3KhY7Ohfg6n9MuPPNWzCtv4mSKrrp9WT5Sv/atFap9/uT8IZu+aDzW2TGnZJjeXX9cQbMY4VeHccxyUck6RfVcjn7qB3lLfQ0IFMeIlIPx7EkMKlZQ2VpwuWuLnv2pwtPh+KtnyL6fI6mXKlB4AQB+4JnsESfgwlO4U23UG4DAa/IFIzoIBa9ZbB5/OYahFJK7v1nssRaz4yYzoOO7YcQefQVoRX/dql9I1roeRTwytWvQThbwpkgwqg2D7Z2aocq1TtrUVhbGbgspAk/WCkmOeekaC22Lj0Cl/q1KiolZ/Cdt4RNYYpPirpkc5k/6EfkAVW6fQh1ZMKfFr1cYgjVrXA19Ap7iSl4UOmdM1b9rL26di9bCXRCBYUBz9pc/274rlJkUTY3iilIY8SJ8bCly/H4z9dFDgd2dzumJ7QQUo2QIcoZVNPQXCXp0TXRdwPMA74SHqIACiJ6mKd/yYkS9u5MElRI8GiAI9gwA8LC4U9PqhLLY3YtShcbSvrAmSLP1ShIomuzxdstvJ/K5nh+cobzkSETxB07MqZu2Tj8=
+  file: app/build/outputs/apk/release/app-release.apk
   on:
     repo: PSDev/DevDrawer
     tags: true
