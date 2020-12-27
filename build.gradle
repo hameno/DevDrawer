@@ -41,7 +41,9 @@ allprojects {
         // Project versions
         gitHash = gitScmVersion()
         appVersionName = project.version
-        appVersionCode = buildVersionCode()
+        def versionCode = buildVersionCode()
+        println(versionCode)
+        appVersionCode = versionCode
     }
 }
 

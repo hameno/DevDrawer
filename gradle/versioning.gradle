@@ -7,10 +7,10 @@ ext {
 
         final def (Integer majorInt, Integer minorInt, Integer patchInt, Integer commitInt) = [major, minor, patchVersion, commitCount].collect { it.toInteger() }
 
-        final def majorPart = (majorInt * 10000000) // Range 00 - 99
-        final def minorPart = (minorInt * 100000) // Range 00 - 99
-        final def patchPart = (patchInt * 1000) // Range 00 - 99
-        final def commitPart = commitInt // Range 00 - 999
+        final def majorPart = (majorInt * 100000000) // Range 00 - 99
+        final def minorPart = (minorInt * 1000000) // Range 00 - 99
+        final def patchPart = (patchInt * 10000) // Range 00 - 99
+        final def commitPart = commitInt // Range 0000 - 9999
         majorPart + minorPart + patchPart + commitPart
     }
     enhancedVersion = { final int versionMajor, final int versionMinor, final int versionPatch ->
@@ -18,8 +18,7 @@ ext {
         final gitHash = gitScmVersion()
         Integer gitVersion
         try {
-            final String lastTaggedRevision = "git rev-list --tags --no-walk --max-count=1".execute([], project.rootDir).text.trim()
-            gitVersion = "git rev-list $lastTaggedRevision..HEAD --count".execute([], project.rootDir).text.trim().toInteger()
+            gitVersion = "git rev-list HEAD --count".execute([], project.rootDir).text.trim().toInteger()
         } catch (final e) {
             logger.warn("Error getting git commit count since last tag: $e")
             gitVersion = 999
