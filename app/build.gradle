@@ -26,6 +26,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
+        resConfig "en"
+
         // Version info
         buildConfigField 'String', 'GIT_SHA', "\"${project.ext.gitHash}\""
 
