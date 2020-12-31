@@ -61,7 +61,7 @@ class WidgetProfilesListAdapter : ListAdapter<WidgetProfile, WidgetProfileViewHo
                     }
                     setOnLongClickListener {
                         consume {
-                            onEditClickListener.invoke(item)
+                            onEditClickListener(item)
                         }
                     }
                 }

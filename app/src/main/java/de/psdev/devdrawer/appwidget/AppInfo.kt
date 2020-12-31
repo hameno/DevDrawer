@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
+import androidx.recyclerview.widget.DiffUtil
 import mu.KotlinLogging
 import okio.HashingSink
 import okio.blackholeSink
@@ -19,7 +20,16 @@ data class AppInfo(
     val firstInstalledTime: Long,
     val lastUpdateTime: Long,
     val signatureSha256: String
-)
+) {
+    companion object {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<AppInfo>() {
+            override fun areItemsTheSame(oldItem: AppInfo, newItem: AppInfo): Boolean =
+                oldItem.packageName == newItem.packageName
+
+            override fun areContentsTheSame(oldItem: AppInfo, newItem: AppInfo): Boolean = oldItem == newItem
+        }
+    }
+}
 
 fun PackageHashInfo.toAppInfo(context: Context): AppInfo? = try {
     val packageManager = context.packageManager

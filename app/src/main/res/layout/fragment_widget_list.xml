@@ -13,7 +13,8 @@
         android:orientation="vertical"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/list_item_widget" />
 
     <LinearLayout
         android:id="@+id/container_no_widgets"
@@ -29,14 +30,14 @@
             android:id="@+id/txt_no_widgets"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No widgets created" />
+            android:text="@string/no_widgets_created" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_add_widget"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Add widget"
+            android:text="@string/add_widget"
             android:visibility="gone"
             app:icon="@drawable/ic_outline_add_box_24"
             tools:visibility="visible" />
