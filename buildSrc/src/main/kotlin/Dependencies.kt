@@ -41,7 +41,7 @@ object Versions {
     // Testing
     const val junit = "4.13.1"
     const val robolectric = "4.5-alpha-3"
-    const val mockk = "1.10.3"
+    const val mockk = "1.10.4"
 }
 
 object Config {

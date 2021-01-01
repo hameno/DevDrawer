@@ -19,9 +19,7 @@ abstract class BaseFragment<T : ViewBinding> : Fragment() {
     lateinit var trackingService: TrackingService
 
     private var _binding: T? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     protected val binding get() = _binding!!
 
     protected var toolbarTitle: CharSequence

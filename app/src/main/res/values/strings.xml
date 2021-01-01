@@ -55,5 +55,14 @@
     <string name="delete">Delete</string>
     <string name="uninstall">Uninstall</string>
     <string name="app_details">App details</string>
+    <string name="add_app_signature">App signature</string>
+    <string name="add_package_name">package name</string>
+    <string name="app_icon">App icon</string>
+    <string name="enter_package_name_filter">Enter package name filter</string>
+    <string name="select_signature_from_app">Select signature from app</string>
+    <string name="apps_matching_filter">Apps matching filter</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_widgets_created">No widgets created</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>

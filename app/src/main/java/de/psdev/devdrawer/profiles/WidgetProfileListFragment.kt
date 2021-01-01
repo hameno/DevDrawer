@@ -134,6 +134,8 @@ class WidgetProfileListFragment: BaseFragment<FragmentWidgetProfileListBinding>(
     }
 
     override fun onDestroyView() {
+        _selectionTracker = null
+        listAdapter.selectionTracker = null
         binding.recyclerProfiles.adapter = null
         super.onDestroyView()
     }

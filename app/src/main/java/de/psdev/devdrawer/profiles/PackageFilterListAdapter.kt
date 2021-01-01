@@ -1,7 +1,7 @@
 package de.psdev.devdrawer.profiles
 
 import android.view.ViewGroup
-import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,8 +14,9 @@ import de.psdev.devdrawer.utils.layoutInflater
 import java.util.*
 
 class PackageFilterListAdapter(
-    private val onDeleteClickListener: ((String) -> Unit)
-): ListAdapter<PackageFilter, PackageFilterListAdapter.PackageFilterViewHolder>(PackageFilter.DIFF_CALLBACK) {
+    private val onDeleteClickListener: PackageFilterActionListener,
+    private val onPreviewFilterClickListener: PackageFilterActionListener
+) : ListAdapter<PackageFilter, PackageFilterListAdapter.PackageFilterViewHolder>(PackageFilter.DIFF_CALLBACK) {
 
     var selectionTracker: SelectionTracker<String>? = null
 
@@ -24,13 +25,14 @@ class PackageFilterListAdapter(
     // ==========================================================================================================================
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PackageFilterViewHolder {
-        val onClickListener: (String) -> Unit = { selectedItem: String ->
-            selectionTracker?.select(selectedItem)
+        val onClickListener: PackageFilterActionListener = { packageFilter ->
+            selectionTracker?.select(packageFilter.id)
         }
         return PackageFilterViewHolder(
             binding = ListItemPackageFilterBinding.inflate(parent.layoutInflater, parent, false),
             onClickListener = onClickListener,
-            onDeleteClickListener = onDeleteClickListener
+            onDeleteClickListener = onDeleteClickListener,
+            onPreviewFilterClickListener = onPreviewFilterClickListener
         )
     }
 
@@ -44,41 +46,56 @@ class PackageFilterListAdapter(
 
     class PackageFilterViewHolder(
         private val binding: ListItemPackageFilterBinding,
-        private val onClickListener: (String) -> Unit,
-        private val onDeleteClickListener: (String) -> Unit
-    ): RecyclerView.ViewHolder(binding.root) {
+        private val onClickListener: PackageFilterActionListener,
+        private val onDeleteClickListener: PackageFilterActionListener,
+        private val onPreviewFilterClickListener: PackageFilterActionListener
+    ) : RecyclerView.ViewHolder(binding.root) {
         var currentItem: PackageFilter? = null
             private set
 
         fun bindTo(packageFilter: PackageFilter, isActivated: Boolean = false) {
             currentItem = packageFilter
-            itemView.isActivated = isActivated
-            itemView.setOnClickListener {
-                onClickListener(packageFilter.id)
-            }
-            binding.btnInfo.isInvisible = packageFilter.type == FilterType.PACKAGE_NAME
-            binding.btnInfo.setOnClickListener {
-                val text = when (packageFilter.type) {
-                    FilterType.PACKAGE_NAME -> packageFilter.description
-                    FilterType.SIGNATURE -> "SHA256: ${packageFilter.filter.toUpperCase(Locale.ROOT).chunkedSequence(2).joinToString(separator = ":")}"
-                }
-                MaterialAlertDialogBuilder(itemView.context)
-                    .setTitle(R.string.info)
-                    .setMessage(text)
-                    .setPositiveButton(R.string.close, null)
-                    .show()
-            }
             with(binding) {
+                root.isActivated = isActivated
+                root.setOnClickListener {
+                    onClickListener(packageFilter)
+                }
+                val iconRes = when (packageFilter.type) {
+                    FilterType.PACKAGE_NAME -> R.drawable.ic_regex
+                    FilterType.SIGNATURE -> R.drawable.ic_certificate
+                }
+                imgIcon.setImageResource(iconRes)
                 txtName.text = when (packageFilter.type) {
-                    FilterType.PACKAGE_NAME -> "Package name: ${packageFilter.filter}"
-                    FilterType.SIGNATURE -> "App signature: ${packageFilter.description}"
+                    FilterType.PACKAGE_NAME -> packageFilter.filter
+                    FilterType.SIGNATURE -> packageFilter.description
                 }
 
+                with(btnPreview) {
+                    setOnClickListener {
+                        onPreviewFilterClickListener(packageFilter)
+                    }
+                }
+                with(btnInfo) {
+                    isVisible = packageFilter.type == FilterType.SIGNATURE
+                    setOnClickListener {
+                        val text = when (packageFilter.type) {
+                            FilterType.PACKAGE_NAME -> packageFilter.description
+                            FilterType.SIGNATURE -> "SHA256: ${
+                                packageFilter.filter.toUpperCase(Locale.ROOT).chunkedSequence(2)
+                                    .joinToString(separator = ":")
+                            }"
+                        }
+                        MaterialAlertDialogBuilder(itemView.context)
+                            .setTitle(R.string.info)
+                            .setMessage(text)
+                            .setPositiveButton(R.string.close, null)
+                            .show()
+                    }
+                }
                 btnDelete.setOnClickListener {
-                    onDeleteClickListener(packageFilter.id)
+                    onDeleteClickListener(packageFilter)
                 }
             }
-
         }
     }
 
