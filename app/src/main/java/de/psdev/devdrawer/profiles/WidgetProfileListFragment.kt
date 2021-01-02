@@ -117,7 +117,7 @@ class WidgetProfileListFragment: BaseFragment<FragmentWidgetProfileListBinding>(
                             try {
                                 devDrawerDatabase.widgetProfileDao().delete(widgetProfile)
                             } catch (e: SQLiteConstraintException) {
-                                Snackbar.make(binding.root, "Cannot delete profile, still being used by widgets", Snackbar.LENGTH_LONG).show()
+                                Snackbar.make(binding.root, R.string.error_profile_in_use, Snackbar.LENGTH_LONG).show()
                             }
                         }
                         tracker.deselect(selectedProfile)

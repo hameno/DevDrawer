@@ -1,8 +1,4 @@
-plugins {
-    id 'com.android.application'
-    id 'com.github.triplet.play' version '3.1.0'
-}
-
+apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs.kotlin"
@@ -11,6 +7,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 apply plugin: 'com.google.firebase.firebase-perf'
+apply plugin: 'com.github.triplet.play'
 
 android {
     compileSdkVersion Config.compile_sdk
@@ -156,6 +153,9 @@ dependencies {
     // Android Material
     implementation Libs.material_components
 
+    // Color Picker
+    implementation "com.github.dhaval2404:colorpicker:2.0"
+
     //  Dagger
     implementation Libs.daggerHiltAndroid
     kapt Libs.daggerHiltAndroidCompiler
@@ -200,7 +200,6 @@ kapt {
     correctErrorTypes true
 }
 
-import com.github.triplet.gradle.androidpublisher.ResolutionStrategy
 play {
     def serviceAccountFileName = "google-play-api.json"
     if (rootProject.file(serviceAccountFileName).exists()) {
@@ -208,6 +207,5 @@ play {
     } else if (System.getenv("ANDROID_PUBLISHER_CREDENTIALS") == null) {
         enabled.set(false)
     }
-    resolutionStrategy.set(ResolutionStrategy.IGNORE)
     releaseName.set(project.version)
 }

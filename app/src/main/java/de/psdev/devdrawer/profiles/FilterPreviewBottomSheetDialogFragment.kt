@@ -49,6 +49,7 @@ class FilterPreviewBottomSheetDialogFragment : BottomSheetDialogFragment() {
         _binding = it
     }.root
 
+    @Suppress("DEPRECATION")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
@@ -57,17 +58,17 @@ class FilterPreviewBottomSheetDialogFragment : BottomSheetDialogFragment() {
             lifecycleScope.launchWhenResumed {
                 withContext(Dispatchers.IO) {
                     val filter = devDrawerDatabase.packageFilterDao().findById(navArgs.packageFilterId)
-                        ?: throw IllegalArgumentException("Unknown filter")
+                            ?: throw IllegalArgumentException("Unknown filter")
                     val context = requireContext()
                     val packageManager = context.packageManager
                     val affectedApps = Firebase.performance.trace("profile_filter_preview") {
                         packageManager.getInstalledPackages(PackageManager.GET_SIGNATURES)
-                            .asSequence()
-                            .map { it.toPackageHashInfo() }
-                            .filter { filter.matches(it) }
-                            .mapNotNull { it.toAppInfo(context) }
-                            .sortedBy { it.name }
-                            .toList()
+                                .asSequence()
+                                .map { it.toPackageHashInfo() }
+                                .filter { filter.matches(it) }
+                                .mapNotNull { it.toAppInfo(context) }
+                                .sortedBy { it.name }
+                                .toList()
                     }
                     logger.warn { "Affected apps: $affectedApps" }
                     withContext(Dispatchers.Main) {
