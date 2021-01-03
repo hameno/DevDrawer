@@ -1,5 +1,6 @@
 package de.psdev.devdrawer.profiles
 
+import android.database.sqlite.SQLiteConstraintException
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.isVisible
@@ -8,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import de.psdev.devdrawer.BaseFragment
 import de.psdev.devdrawer.R
@@ -18,6 +20,7 @@ import de.psdev.devdrawer.receivers.UpdateReceiver
 import de.psdev.devdrawer.utils.awaitSubmit
 import de.psdev.devdrawer.utils.consume
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import mu.KLogging
 import reactivecircus.flowbinding.android.view.clicks
 import reactivecircus.flowbinding.android.widget.textChanges
@@ -35,26 +38,26 @@ class WidgetProfileEditFragment : BaseFragment<FragmentWidgetProfileEditBinding>
 
     private val onDeleteClickListener: PackageFilterActionListener = { packageFilter ->
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Delete?")
-            .setNegativeButton("No") { _, _ -> }
-            .setPositiveButton("Yes") { _, _ ->
-                lifecycleScope.launchWhenResumed {
-                    devDrawerDatabase.packageFilterDao().deleteById(packageFilter.id)
-                    UpdateReceiver.send(requireContext())
+                .setTitle("Delete?")
+                .setNegativeButton(R.string.no) { _, _ -> }
+                .setPositiveButton(R.string.yes) { _, _ ->
+                    lifecycleScope.launchWhenResumed {
+                        devDrawerDatabase.packageFilterDao().deleteById(packageFilter.id)
+                        UpdateReceiver.send(requireContext())
+                    }
                 }
-            }
-            .show()
+                .show()
     }
     private val onPreviewFilterClickListener: PackageFilterActionListener = { packageFilter ->
         findNavController().navigate(
-            WidgetProfileEditFragmentDirections.openFilterPreviewBottomSheetDialogFragment(
-                packageFilterId = packageFilter.id
-            )
+                WidgetProfileEditFragmentDirections.openFilterPreviewBottomSheetDialogFragment(
+                        packageFilterId = packageFilter.id
+                )
         )
     }
     private val listAdapter: PackageFilterListAdapter = PackageFilterListAdapter(
-        onDeleteClickListener = onDeleteClickListener,
-        onPreviewFilterClickListener = onPreviewFilterClickListener
+            onDeleteClickListener = onDeleteClickListener,
+            onPreviewFilterClickListener = onPreviewFilterClickListener
     )
     private var widgetProfile: WidgetProfile? = null
 
@@ -66,9 +69,9 @@ class WidgetProfileEditFragment : BaseFragment<FragmentWidgetProfileEditBinding>
     }
 
     override fun createViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): FragmentWidgetProfileEditBinding = FragmentWidgetProfileEditBinding.inflate(inflater, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,9 +82,9 @@ class WidgetProfileEditFragment : BaseFragment<FragmentWidgetProfileEditBinding>
             btnAddFilter.setOnClickListener { _ ->
                 widgetProfile?.let {
                     val directions =
-                        WidgetProfileEditFragmentDirections.openAddPackageFilterBottomSheetDialogFragment(
-                            widgetProfileId = it.id
-                        )
+                            WidgetProfileEditFragmentDirections.openAddPackageFilterBottomSheetDialogFragment(
+                                    widgetProfileId = it.id
+                            )
                     findNavController().navigate(directions)
                 }
             }
@@ -89,9 +92,9 @@ class WidgetProfileEditFragment : BaseFragment<FragmentWidgetProfileEditBinding>
             btnAddSignature.setOnClickListener {
                 widgetProfile?.let {
                     val directions =
-                        WidgetProfileEditFragmentDirections.openAppSignatureChooserBottomSheetDialogFragment(
-                            widgetProfileId = it.id
-                        )
+                            WidgetProfileEditFragmentDirections.openAppSignatureChooserBottomSheetDialogFragment(
+                                    widgetProfileId = it.id
+                            )
                     findNavController().navigate(directions)
                 }
             }
@@ -142,18 +145,22 @@ class WidgetProfileEditFragment : BaseFragment<FragmentWidgetProfileEditBinding>
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.action_delete -> consume {
             MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Delete profile?")
-                .setNegativeButton("No") { _, _ -> }
-                .setPositiveButton("Yes") { _, _ ->
-                    widgetProfile?.let { widgetProfile ->
-                        lifecycleScope.launchWhenResumed {
-                            devDrawerDatabase.widgetProfileDao().delete(widgetProfile)
-                            UpdateReceiver.send(requireContext())
-                            findNavController().popBackStack()
+                    .setTitle("Delete profile?")
+                    .setNegativeButton(R.string.no) { _, _ -> }
+                    .setPositiveButton(R.string.yes) { _, _ ->
+                        widgetProfile?.let { widgetProfile ->
+                            lifecycleScope.launch {
+                                try {
+                                    devDrawerDatabase.widgetProfileDao().delete(widgetProfile)
+                                    UpdateReceiver.send(requireContext())
+                                    findNavController().popBackStack()
+                                } catch (e: SQLiteConstraintException) {
+                                    Snackbar.make(binding.root, R.string.error_profile_in_use, Snackbar.LENGTH_LONG).show()
+                                }
+                            }
                         }
                     }
-                }
-                .show()
+                    .show()
         }
         else -> super.onOptionsItemSelected(item)
     }

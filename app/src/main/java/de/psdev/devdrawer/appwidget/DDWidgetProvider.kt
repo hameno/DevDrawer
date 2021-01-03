@@ -105,7 +105,7 @@ class DDWidgetProvider : AppWidgetProvider() {
         // Setup the widget, and data source / adapter
         val widgetView = RemoteViews(context.packageName, R.layout.widget_layout)
         val widgetColor = widget.color
-        val contrastColor = getTextColor(widgetColor)
+        val contrastColor = widgetColor.textColorForBackground()
 
         // Set background color for widget
         widgetView.setInt(R.id.container_actions, "setBackgroundColor", widgetColor)
@@ -147,8 +147,4 @@ class DDWidgetProvider : AppWidgetProvider() {
         return widgetView
     }
 
-    private fun getTextColor(color: Int): Int = when (color) {
-        Color.RED -> Color.WHITE
-        else -> textColorForBackground(color)
-    }
 }

@@ -3,6 +3,7 @@ package de.psdev.devdrawer.widgets
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,8 @@ import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog
+import com.github.dhaval2404.colorpicker.model.ColorShape
 import dagger.hilt.android.AndroidEntryPoint
 import de.psdev.devdrawer.BaseFragment
 import de.psdev.devdrawer.R
@@ -29,8 +32,12 @@ import de.psdev.devdrawer.receivers.UpdateReceiver
 import de.psdev.devdrawer.utils.awaitSubmit
 import de.psdev.devdrawer.utils.receiveClicksFrom
 import de.psdev.devdrawer.utils.receiveTextChangesFrom
+import de.psdev.devdrawer.utils.sortColorList
 import de.psdev.devdrawer.widgets.EditWidgetFragmentViewModel.Selection
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -61,17 +68,55 @@ class EditWidgetFragment : BaseFragment<FragmentWidgetEditBinding>() {
             findNavController().navigate(EditWidgetFragmentDirections.createProfileAction(widgetProfile.id))
         }
         // Setup views
-        binding.editName.setText("Widget ${args.widgetId}")
+        with(binding) {
+            with(editName) {
+                setText("Widget ${args.widgetId}")
+            }
+            with(btnColor) {
+                setOnClickListener {
+                    val currentColor = viewModel.savedWidget.value?.color ?: Color.BLACK
+                    MaterialColorPickerDialog
+                            .Builder(requireContext())
+                            .setTitle(R.string.pick_widget_color)
+                            .setDefaultColor(currentColor)
+                            .setColorShape(ColorShape.SQAURE)
+                            .setColorRes(resources.getIntArray(R.array.widget_colors).sortColorList())
+                            .setPositiveButton(R.string.ok)
+                            .setNegativeButton(R.string.cancel)
+                            .setColorListener { color, _ ->
+                                setBackgroundColor(color)
+                                viewModel.inputColor.value = color
+                            }
+                            .showBottomSheet(childFragmentManager)
+                }
+            }
+        }
+        lifecycleScope.launchWhenResumed {
+            with(binding) {
+                val widget = checkNotNull(viewModel.savedWidget.filterNotNull().first())
+                editName.setText(widget.name)
+                btnColor.setBackgroundColor(widget.color)
+            }
+        }
+
+        binding.btnNewProfile.setOnClickListener {
+            lifecycleScope.launchWhenResumed {
+                val widgetProfile = WidgetProfile(name = "Profile for ${viewModel.inputWidgetName.value}")
+                devDrawerDatabase.widgetProfileDao().insert(widgetProfile)
+                findNavController().navigate(EditWidgetFragmentDirections.createProfileAction(widgetProfile.id))
+            }
+        }
+
         binding.recyclerProfiles.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
         binding.recyclerProfiles.adapter = adapter
         val selectionTracker = SelectionTracker.Builder(
-            "widgetProfile",
-            binding.recyclerProfiles,
-            WidgetProfilesItemKeyProvider(adapter),
-            WidgetProfilesDetailsLookup(binding.recyclerProfiles),
-            StorageStrategy.createStringStorage()
+                "widgetProfile",
+                binding.recyclerProfiles,
+                WidgetProfilesItemKeyProvider(adapter),
+                WidgetProfilesDetailsLookup(binding.recyclerProfiles),
+                StorageStrategy.createStringStorage()
         ).withSelectionPredicate(
-            SelectionPredicates.createSelectSingleAnything()
+                SelectionPredicates.createSelectSingleAnything()
         ).build().also {
             it.onRestoreInstanceState(savedInstanceState)
             if (savedInstanceState == null) {
@@ -82,18 +127,6 @@ class EditWidgetFragment : BaseFragment<FragmentWidgetEditBinding>() {
             _selectionTracker = it
         }
         adapter.selectionTracker = selectionTracker
-
-        lifecycleScope.launchWhenResumed {
-            binding.editName.setText(viewModel.savedWidget.filterNotNull().first().name)
-        }
-
-        binding.btnNewProfile.setOnClickListener {
-            lifecycleScope.launchWhenResumed {
-                val widgetProfile = WidgetProfile(name = "Profile for ${viewModel.inputWidgetName.value}")
-                devDrawerDatabase.widgetProfileDao().insert(widgetProfile)
-                findNavController().navigate(EditWidgetFragmentDirections.createProfileAction(widgetProfile.id))
-            }
-        }
 
         viewLifecycleScope.launch {
             viewModel.inputWidgetName.receiveTextChangesFrom(binding.editName).launchIn(this)
@@ -128,7 +161,7 @@ class EditWidgetFragment : BaseFragment<FragmentWidgetEditBinding>() {
                     }
                 }
             }.launchIn(this)
-            viewModel.outputCloseTrigger.asFlow().onEach { widget ->
+            viewModel.outputCloseTrigger.onEach { widget ->
                 val resultValue = Intent().apply {
                     putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widget.id)
                 }

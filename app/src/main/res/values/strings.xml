@@ -64,5 +64,10 @@
     <string name="cancel">Cancel</string>
     <string name="no_widgets_created">No widgets created</string>
     <string name="add_widget">Add widget</string>
+    <string name="pick_widget_color">Pick widget color</string>
+    <string name="ok">OK</string>
+    <string name="error_profile_in_use">Cannot delete profile, still being used by widgets</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 
 </resources>
