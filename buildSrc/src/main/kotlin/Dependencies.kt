@@ -35,7 +35,7 @@ object Versions {
     const val leakCanary = "2.6"
     const val materialComponents = "1.3.0-beta01"
     const val okhttp = "4.9.0"
-    const val okio = "2.9.0"
+    const val okio = "2.10.0"
     const val slf4jAndroidLogger = "1.0.5"
 
     // Testing
