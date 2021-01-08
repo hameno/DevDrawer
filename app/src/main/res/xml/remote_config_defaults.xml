@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap>
+    <!-- Analytics -->
     <entry>
-        <key>play_store_review_min_widgets</key>
+        <key>feature_analytics_enabled</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>feature_analytics_optin_min_time</key>
+        <value>1606777200000</value>
+    </entry>
+    <!-- In-App Reviews -->
+    <entry>
+        <key>feature_inappreview_enabled</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>feature_inappreview_minwidgets</key>
         <value>1</value>
+    </entry>
+    <entry>
+        <key>feature_inappreview_mintimebetweenlaunch</key>
+        <value>604800000</value>
     </entry>
 </defaultsMap>
