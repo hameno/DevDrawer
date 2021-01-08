@@ -7,11 +7,13 @@ import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import de.psdev.devdrawer.BuildConfig
 import de.psdev.devdrawer.R
 import de.psdev.devdrawer.utils.await
+import mu.KLogging
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class RemoteConfigService @Inject constructor() {
+    companion object : KLogging()
 
     private val remoteConfig by lazy { Firebase.remoteConfig }
 
@@ -26,18 +28,26 @@ class RemoteConfigService @Inject constructor() {
     }
 
     suspend fun getBoolean(key: String): Boolean {
-        remoteConfig.fetchAndActivate().await()
+        updateConfig()
         return remoteConfig[key].asBoolean()
     }
 
     suspend fun getInteger(key: String): Int {
-        remoteConfig.fetchAndActivate().await()
+        updateConfig()
         return remoteConfig[key].asLong().toInt()
     }
 
     suspend fun getLong(key: String): Long {
-        remoteConfig.fetchAndActivate().await()
+        updateConfig()
         return remoteConfig[key].asLong()
+    }
+
+    private suspend fun updateConfig() {
+        try {
+            remoteConfig.fetchAndActivate().await()
+        } catch (e: Exception) {
+            logger.warn(e) { "updateConfig failed: ${e.message}" }
+        }
     }
 
 }
