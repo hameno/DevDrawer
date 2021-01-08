@@ -10,7 +10,7 @@ object Versions {
     const val firebasePlatform = "26.2.0"
 
     // Libs
-    const val aboutLibraries = "8.6.3"
+    const val aboutLibraries = "8.6.5"
     const val androidXAppCompat = "1.3.0-alpha02"
     const val androidXBrowser = "1.3.0"
     const val androidXConstraintLayout = "2.1.0-alpha2"
