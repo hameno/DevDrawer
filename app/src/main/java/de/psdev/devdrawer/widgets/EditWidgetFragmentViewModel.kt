@@ -1,28 +1,33 @@
 package de.psdev.devdrawer.widgets
 
 import android.graphics.Color
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider.Factory
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import de.psdev.devdrawer.database.DevDrawerDatabase
 import de.psdev.devdrawer.database.Widget
 import de.psdev.devdrawer.database.WidgetProfile
+import de.psdev.devdrawer.utils.simpleFactory
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import mu.KLogging
 
-class EditWidgetFragmentViewModel @ViewModelInject constructor(
-        private val database: DevDrawerDatabase,
-        @Assisted private val savedStateHandle: SavedStateHandle
+class EditWidgetFragmentViewModel @AssistedInject constructor(
+    private val database: DevDrawerDatabase,
+    @Assisted private val widgetId: Int
 ) : ViewModel() {
 
-    companion object : KLogging()
-
-    // TODO Replace by safer method once https://github.com/google/dagger/issues/1906 is solved
-    val widgetId = savedStateHandle.get<Int>("widgetId")
-            ?: throw IllegalStateException("No widgetId")
+    companion object : KLogging() {
+        fun factory(
+            viewModelFactory: ViewModelFactory,
+            widgetId: Int
+        ): Factory = simpleFactory {
+            viewModelFactory.create(widgetId)
+        }
+    }
 
     // Inputs
     val inputWidgetName = MutableStateFlow("")
@@ -59,19 +64,19 @@ class EditWidgetFragmentViewModel @ViewModelInject constructor(
         }.launchIn(viewModelScope)
         inputSaveTrigger.asSharedFlow().flatMapLatest {
             combine(
-                    inputWidgetName,
-                    inputColor,
-                    inputSelectedProfile.filterIsInstance<Selection.Profile>()
+                inputWidgetName,
+                inputColor,
+                inputSelectedProfile.filterIsInstance<Selection.Profile>()
             ) { name, color, selection ->
                 savedWidget.value?.copy(
-                        name = name,
-                        color = color,
-                        profileId = selection.profile.id
+                    name = name,
+                    color = color,
+                    profileId = selection.profile.id
                 ) ?: Widget(
-                        id = widgetId,
-                        name = name,
-                        color = color,
-                        profileId = selection.profile.id
+                    id = widgetId,
+                    name = name,
+                    color = color,
+                    profileId = selection.profile.id
                 )
             }
         }.onEach { widget ->
@@ -86,4 +91,8 @@ class EditWidgetFragmentViewModel @ViewModelInject constructor(
         data class Profile(val profile: WidgetProfile) : Selection()
     }
 
+    @AssistedFactory
+    interface ViewModelFactory {
+        fun create(widgetId: Int): EditWidgetFragmentViewModel
+    }
 }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import de.psdev.devdrawer.analytics.TrackingService
 import de.psdev.devdrawer.review.ReviewManager
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -16,7 +17,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launchWhenResumed {
+        lifecycleScope.launch {
             reviewManager.triggerReview(this@BaseActivity)
         }
     }

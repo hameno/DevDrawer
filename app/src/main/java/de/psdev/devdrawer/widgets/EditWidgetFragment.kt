@@ -48,9 +48,14 @@ class EditWidgetFragment : BaseFragment<FragmentWidgetEditBinding>() {
     @Inject
     lateinit var devDrawerDatabase: DevDrawerDatabase
 
+    @Inject
+    lateinit var viewModelViewModelFactory: EditWidgetFragmentViewModel.ViewModelFactory
+
     val args by navArgs<EditWidgetFragmentArgs>()
 
-    val viewModel: EditWidgetFragmentViewModel by viewModels()
+    val viewModel: EditWidgetFragmentViewModel by viewModels() {
+        EditWidgetFragmentViewModel.factory(viewModelViewModelFactory, args.widgetId)
+    }
 
     var _selectionTracker: SelectionTracker<String>? = null
 
