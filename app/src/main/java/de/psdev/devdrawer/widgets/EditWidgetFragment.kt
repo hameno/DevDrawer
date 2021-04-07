@@ -53,7 +53,7 @@ class EditWidgetFragment : BaseFragment<FragmentWidgetEditBinding>() {
 
     val args by navArgs<EditWidgetFragmentArgs>()
 
-    val viewModel: EditWidgetFragmentViewModel by viewModels() {
+    val viewModel: EditWidgetFragmentViewModel by viewModels {
         EditWidgetFragmentViewModel.factory(viewModelViewModelFactory, args.widgetId)
     }
 
