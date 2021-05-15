@@ -133,7 +133,6 @@ dependencies {
     implementation Libs.androidx_constraint_layout
     implementation Libs.androidx_core
     implementation Libs.androidx_fragment
-    implementation Libs.androidx_hilt_lifecycle_viewmodel
     implementation Libs.androidx_hilt_work
     implementation Libs.androidx_lifecycle_viewmodel
     implementation Libs.androidx_lifecycle_java8
