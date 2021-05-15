@@ -11,7 +11,6 @@ import android.widget.TextView
 import de.psdev.devdrawer.R
 import de.psdev.devdrawer.database.DevDrawerDatabase
 import kotlinx.coroutines.runBlocking
-import java.util.*
 
 class PartialMatchAdapter(
     activity: Activity,
@@ -19,10 +18,10 @@ class PartialMatchAdapter(
     private val items: List<String>,
     private val devDrawerDatabase: DevDrawerDatabase,
     private val editMode: Boolean = false
-): BaseAdapter(), Filterable {
+) : BaseAdapter(), Filterable {
     private val filteredItems = mutableListOf<String>()
     private val layoutInflater: LayoutInflater = activity.layoutInflater
-    private val packageFilter = object: Filter() {
+    private val packageFilter = object : Filter() {
         override fun performFiltering(charSequence: CharSequence?): FilterResults {
             return if (charSequence == null) {
                 FilterResults().apply {
@@ -30,8 +29,9 @@ class PartialMatchAdapter(
                     values = items
                 }
             } else {
-                val existingFilters = runBlocking { devDrawerDatabase.packageFilterDao().findAllByProfile(profileId) }
-                    .map { it.filter }
+                val existingFilters =
+                    runBlocking { devDrawerDatabase.packageFilterDao().findAllByProfile(profileId) }
+                        .map { it.filter }
                 val existingFilterRegexes = existingFilters
                     .map { it.replace("*", ".*").toRegex() }
                 val filteredItems = items
@@ -40,7 +40,7 @@ class PartialMatchAdapter(
                     // Filter item matching existing filters with regex
                     .filterNot { !editMode && existingFilterRegexes.any { regex -> regex.matches(it) } }
                     // Filter matching
-                    .filter { it.toLowerCase(Locale.ROOT).contains(charSequence.toString().toLowerCase(Locale.ROOT)) }
+                    .filter { it.lowercase().contains(charSequence.toString().lowercase()) }
                 FilterResults().apply {
                     count = filteredItems.size
                     values = filteredItems
@@ -66,7 +66,7 @@ class PartialMatchAdapter(
 
     override fun getItemId(position: Int): Long = filteredItems[position].hashCode().toLong()
 
-    override fun getView(position: Int, convertView: View?, viewGroup: ViewGroup): View? {
+    override fun getView(position: Int, convertView: View?, viewGroup: ViewGroup): View {
         val view = convertView ?: createView(viewGroup)
         bindView(position, view)
         return view

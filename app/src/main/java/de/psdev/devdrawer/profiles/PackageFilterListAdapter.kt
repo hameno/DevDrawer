@@ -11,7 +11,6 @@ import de.psdev.devdrawer.database.FilterType
 import de.psdev.devdrawer.database.PackageFilter
 import de.psdev.devdrawer.databinding.ListItemPackageFilterBinding
 import de.psdev.devdrawer.utils.layoutInflater
-import java.util.*
 
 class PackageFilterListAdapter(
     private val onDeleteClickListener: PackageFilterActionListener,
@@ -81,7 +80,7 @@ class PackageFilterListAdapter(
                         val text = when (packageFilter.type) {
                             FilterType.PACKAGE_NAME -> packageFilter.description
                             FilterType.SIGNATURE -> "SHA256: ${
-                                packageFilter.filter.toUpperCase(Locale.ROOT).chunkedSequence(2)
+                                packageFilter.filter.uppercase().chunkedSequence(2)
                                     .joinToString(separator = ":")
                             }"
                         }

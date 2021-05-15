@@ -95,6 +95,7 @@ android {
     lintOptions {
         lintConfig project.file('lint.xml')
         disable "GoogleAppIndexingWarning"
+        disable "RemoveWorkManagerInitializer"
         enable 'Interoperability'
     }
     packagingOptions {

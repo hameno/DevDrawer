@@ -37,7 +37,11 @@ class TrackingService @Inject constructor(
         const val CONFIG_KEY_MIN_TIME = "feature_analytics_optin_min_time"
     }
 
-    private val sharedPreferences by lazy { PreferenceManager.getDefaultSharedPreferences(application) }
+    private val sharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(
+            application
+        )
+    }
     private var firebaseAnalyticsOptInStatus: OptInStatus
         get() = if (sharedPreferences.contains(PREF_KEY_OPTED_IN)) {
             when (sharedPreferences.getBoolean(PREF_KEY_OPTED_IN, false)) {
@@ -51,24 +55,26 @@ class TrackingService @Inject constructor(
             OptInStatus.UNKNOWN -> throw IllegalArgumentException("UNKNOWN not allowed")
         }
     private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
-    private val preferenceChangedListener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
-        logger.info { "Preference changed: $key" }
-        when (key) {
-            PREF_KEY_OPTED_IN -> {
-                val value = sharedPreferences.getBoolean(key, false)
-                sharedPreferences.edit {
-                    putLong(PREF_KEY_OPTED_IN_TIME, System.currentTimeMillis())
-                }
-                if (value) {
-                    setConsentStatus(FirebaseAnalytics.ConsentStatus.GRANTED)
-                    firebaseAnalytics.setAnalyticsCollectionEnabled(true)
-                } else {
-                    setConsentStatus(FirebaseAnalytics.ConsentStatus.DENIED)
-                    firebaseAnalytics.setAnalyticsCollectionEnabled(false)
+    private val preferenceChangedListener =
+        OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            logger.info { "Preference changed: $key" }
+            when (key) {
+                PREF_KEY_OPTED_IN -> {
+                    val value = sharedPreferences.getBoolean(key, false)
+                    sharedPreferences.edit {
+                        putLong(PREF_KEY_OPTED_IN_TIME, System.currentTimeMillis())
+                    }
+                    if (value) {
+                        setConsentStatus(FirebaseAnalytics.ConsentStatus.GRANTED)
+                        firebaseAnalytics.setAnalyticsCollectionEnabled(true)
+                    } else {
+                        setConsentStatus(FirebaseAnalytics.ConsentStatus.DENIED)
+                        firebaseAnalytics.setAnalyticsCollectionEnabled(false)
+                    }
                 }
             }
         }
-    }
+    private val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     init {
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferenceChangedListener)
@@ -117,9 +123,13 @@ class TrackingService @Inject constructor(
                         )
                         .setPositiveButton("Opt-in") { _, _ ->
                             optIn()
-                            Snackbar.make(activity.findViewById(android.R.id.content), buildSpannedString {
-                                bold { append("Thank you! You can change your decision anytime on the settings tab.") }
-                            }, Snackbar.LENGTH_LONG).apply {
+                            Snackbar.make(
+                                activity.findViewById(android.R.id.content),
+                                buildSpannedString {
+                                    bold { append("Thank you! You can change your decision anytime on the settings tab.") }
+                                },
+                                Snackbar.LENGTH_LONG
+                            ).apply {
                                 animationMode = Snackbar.ANIMATION_MODE_SLIDE
                                 setAction("OK") {
                                     dismiss()
@@ -131,7 +141,7 @@ class TrackingService @Inject constructor(
                         .setCancelable(false)
                         .create()
                     alertDialog.setCanceledOnTouchOutside(false)
-                    val job = GlobalScope.async(Dispatchers.Main, start = CoroutineStart.LAZY) {
+                    val job = coroutineScope.async(start = CoroutineStart.LAZY) {
                         alertDialog.findViewById<TextView>(android.R.id.message)?.movementMethod =
                             LinkMovementMethod.getInstance()
                         val positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
